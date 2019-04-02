@@ -36,7 +36,7 @@ for x in range(1, (w-1)):
     
         var = abs(var_x) + abs(var_y)
 
-        res[x][y] = var.T
+        res[x][y] = var
 
 
 
