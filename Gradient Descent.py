@@ -1,0 +1,104 @@
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import pandas as pd
+
+# 生成随机数据
+
+x_data = np.random.randint(100, size=100)
+E = np.random.randint(200, size=100)
+a = 10
+b = 10
+y_data = a + b * x_data +E
+
+plt.figure()
+
+# 学习率learning rate
+lr = 0.0001
+# 截距
+b = 60
+# 斜率
+k = 0
+# 最大迭代次数
+epochs = 500
+
+
+def gradient_descent_runner(x_data, y_data, b, k, lr, epochs):
+    # 计算总数据量
+    m = float(len(x_data))
+    # 循环epochs次
+    for i in range(epochs):
+        b_grad = 0
+        k_grad = 0
+        # 计算梯度的总和再求平均
+        for j in range(0, len(x_data)):
+            b_grad += (1/m) * (((k * x_data[j]) + b) - y_data[j])
+            k_grad += (1/m) * x_data[j] * (((k * x_data[j]) + b) - y_data[j])
+        # 更新b和k
+        b = b - (lr * b_grad)
+        k = k - (lr * k_grad)
+        # 每迭代5次，输出一次图像
+        if i % 5==0:
+             print("epochs:",i)
+             plt.plot(x_data, y_data, 'b.')
+             plt.plot(x_data, k*x_data + b, 'r')
+
+    return b, k
+b, k = gradient_descent_runner(x_data, y_data, b, k, lr, epochs)
+print(k,b)
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+'''
+################################################
+# 最小二乘法计算回归
+X_bar = X.sum() / 100
+up = ((X - X_bar) * Y).sum()
+down = (X ** 2).sum() - ((X_bar * 100) ** 2) / 100
+W = up / down
+B = (Y - W * X).sum() / 100
+Y_line = W * X + B
+#################################################
+# 调用库函数回归
+lr = LinearRegression()
+lr.fit(X, Y)
+
+y_hat = lr.predict(X)
+# 画图
+plt.figure()
+ax = plt.subplot(1, 2, 1)
+plt.xlabel('X')
+plt.ylabel('Y')
+ax.scatter(X, Y, label='data')
+ax.plot(X, Y_line, label='result')
+bx = plt.subplot(1, 2, 2)
+plt.xlabel('X')
+plt.ylabel('y_hat')
+bx.scatter(X, Y, label='data')
+bx.plot(X, y_hat, label='ragiulation_line')
+# plt.plot(X, Y_line, X, y_hat, 'b--')
+
+plt.legend()
+plt.show()
+# save data
+df = pd.DataFrame(list(zip(X.T.tolist()[0], Y.T.tolist()[0], y_hat.T.tolist()[0], (y_hat - Y_line).T.tolist()[0])))
+df.columns = ['X', 'Y', 'y_hat', 'Y-y_hat']
+df.to_csv('out.csv', encoding='gbk', index=False)
+# 读取数据
+Data = pd.read_csv('out.csv')
+data_X = df.values[:, 0].tolist()
+data_Y = df.values[:, 1].tolist()
+data_Y_hat = df.values[:, 2].tolist()
+# print(data_X)
+# print(data_Y)
+# print(data_Y_hat)
+'''
